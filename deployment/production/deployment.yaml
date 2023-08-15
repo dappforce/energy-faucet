@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: energy-faucet
+  name: energy-faucet
+  namespace: faucet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: energy-faucet
+  template:
+    metadata:
+      labels:
+        app: energy-faucet
+      name: energy-faucet
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - energy-faucet
+              topologyKey: kubernetes.io/hostname
+      containers:
+        - image: <IMAGE>
+          imagePullPolicy: IfNotPresent
+          name: energy-faucet
+          envFrom:
+            - secretRef:
+                name: energy-faucet-secret
+      imagePullSecrets:
+        - name: dockerhub
+      restartPolicy: Always
