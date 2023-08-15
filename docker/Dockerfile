@@ -4,6 +4,7 @@ WORKDIR /opt/subsocial
 
 COPY . .
 
-RUN yarn
+RUN yarn && \
+    yarn prod
 
-CMD [ "yarn", "prod" ]
+CMD [ "yarn", "start" ]
